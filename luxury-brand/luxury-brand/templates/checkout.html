@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Checkout - Luxury Brand</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <script src="https://js.stripe.com/v3/"></script> <!-- Stripe for cards -->
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <div class="container">
+        <h2>Checkout</h2>
+
+        {% if cart_items|length == 0 %}
+            <p>Your cart is empty. <a href="{{ url_for('index') }}">Continue shopping</a>.</p>
+        {% else %}
+
+        <form id="checkout-form" method="POST" action="{{ url_for('checkout') }}">
+            
+            <!-- Payment Method -->
+            <div class="checkout-section">
+                <h3>Payment Method</h3>
+                <div class="payment-options">
+                    <div class="payment-option">
+                        <input type="radio" id="credit_card" name="payment_method" value="credit_card" checked />
+                        <label for="credit_card">Credit Card</label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" id="paypal" name="payment_method" value="paypal" />
+                        <label for="paypal">PayPal</label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" id="bank_transfer" name="payment_method" value="bank_transfer" />
+                        <label for="bank_transfer">Bank Transfer</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credit Card Details Placeholder -->
+            <div id="credit-card-info" class="checkout-section">
+                <h3>Credit Card Details</h3>
+                <p>Payment integration needed here, e.g., Stripe Elements card input form.</p>
+                <!-- Example placeholder fields or embed Stripe Elements -->
+                <!-- You implement this with your chosen payment gateway -->
+            </div>
+
+            <!-- PayPal and Bank transfer instructions placeholders (shown conditionally by JS) -->
+            <div id="paypal-info" class="checkout-section" style="display:none;">
+                <h3>PayPal Payment</h3>
+                <p>You will be redirected to PayPal after submitting your order.</p>
+            </div>
+            <div id="bank-transfer-info" class="checkout-section" style="display:none;">
+                <h3>Bank Transfer</h3>
+                <p>Please transfer the total amount to our bank account as instructed after purchase.</p>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="checkout-section">
+                <h3>Order Summary</h3>
+                <div class="order-summary">
+                    {% set total = 0 %}
+                    {% for item in cart_items %}
+                        <div class="order-item">
+                            <span>
+                                {{ item.product.name if item.product else "Product #"~item.product_id }}
+                            </span>
+                            <span>Qty: {{ item.quantity }}</span>
+                            <span>Price: ${{ "%.2f"|format((item.product.price if item.product else 0) * item.quantity) }}</span>
+                        </div>
+                        {% set total = total + ((item.product.price if item.product else 0) * item.quantity) %}
+                    {% endfor %}
+                    <div class="order-total"><strong>Total: ${{ "%.2f"|format(total) }}</strong></div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Complete Purchase</button>
+        </form>
+
+        {% endif %}
+    </div>
+
+    {% include 'footer.html' %}
+
+    <script>
+        // Show/hide payment details depending on payment method
+        const form = document.getElementById('checkout-form');
+        const paymentRadios = form.querySelectorAll('input[name="payment_method"]');
+        const cardInfo = document.getElementById('credit-card-info');
+        const paypalInfo = document.getElementById('paypal-info');
+        const bankTransferInfo = document.getElementById('bank-transfer-info');
+
+        function updatePaymentFields() {
+            const selected = form.querySelector('input[name="payment_method"]:checked').value;
+            cardInfo.style.display = selected === 'credit_card' ? 'block' : 'none';
+            paypalInfo.style.display = selected === 'paypal' ? 'block' : 'none';
+            bankTransferInfo.style.display = selected === 'bank_transfer' ? 'block' : 'none';
+        }
+
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', updatePaymentFields);
+        });
+
+        updatePaymentFields(); // initial call
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!-- navbar.html -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{{ url_for('index') }}" class="nav-logo">LuxuryBrand</a>
+        <div class="nav-menu">
+            <a href="{{ url_for('index') }}#products" class="nav-link">Products</a>
+            <a href="{{ url_for('index') }}#testimonials" class="nav-link">Testimonials</a>
+            <a href="{{ url_for('index') }}#giveaway" class="nav-link">Giveaway</a>
+            <a href="{{ url_for('index') }}#videos" class="nav-link">Videos</a>
+            <a href="{{ url_for('index') }}#contact" class="nav-link">Contact</a>
+
+            <a href="{{ url_for('cart') }}" class="nav-link">
+                Cart <span id="cart-indicator" class="cart-indicator">{{ cart_count if cart_count > 0 else '' }}</span>
+            </a>
+
+            <a href="{{ url_for('wishlist') }}" class="nav-link">
+                Wishlist <span id="wishlist-indicator" class="wishlist-indicator"></span>
+            </a>
+
+            {% if session.get('user_id') %}
+                <a href="#" class="nav-link">Hello, {{ session['username'] }}</a>
+
+                {% if session.get('user_type') == 'admin' %}
+                    <a href="{{ url_for('admin') }}" class="nav-link admin-btn">Admin</a>
+                {% endif %}
+
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+            {% endif %}
+        </div>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </div>
+</nav>

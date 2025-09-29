@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | LuxuryBrand</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>LuxuryBrand Admin</h2>
+            </div>
+            <ul class="admin-menu">
+                <li class="menu-item active" data-tab="dashboard"><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="menu-item" data-tab="products"><a href="#"><i class="fas fa-box"></i> Products</a></li>
+                <li class="menu-item" data-tab="testimonials"><a href="#"><i class="fas fa-quote-left"></i> Testimonials</a></li>
+                <li class="menu-item" data-tab="videos"><a href="#"><i class="fas fa-play-circle"></i> Videos</a></li>
+                <li class="menu-item" data-tab="giveaway"><a href="#"><i class="fas fa-gift"></i> Giveaway</a></li>
+                <li class="menu-item" data-tab="messages"><a href="#"><i class="fas fa-envelope"></i> Messages</a></li>
+                <li class="menu-item" data-tab="subscribers"><a href="#"><i class="fas fa-users"></i> Subscribers</a></li>
+                <li class="menu-item" data-tab="sections"><a href="#"><i class="fas fa-columns"></i> Section Visibility</a></li>
+                <li class="menu-item"><a href="/"><i class="fas fa-external-link-alt"></i> View Site</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Header -->
+            <div class="admin-header">
+                <div class="header-left">
+                    <h1>Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <img src="{{ url_for('static', filename='images/admin-avatar.jpg') }}" alt="Admin Avatar">
+                        <span>Admin User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="admin-content">
+                <!-- Dashboard Tab -->
+                <div class="tab-content active" id="dashboard-tab">
+                    <!-- Stats Cards -->
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="views-count">0</h3>
+                                <p>Page Views</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="orders-count">0</h3>
+                                <p>Product Orders</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="subscribers-count">0</h3>
+                                <p>Newsletter Signups</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="messages-count">0</h3>
+                                <p>New Messages</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Messages -->
+                    <div class="content-section">
+                        <h2>Recent Messages</h2>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Message</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-messages">
+                                    <!-- Messages will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Tab -->
+                <div class="tab-content" id="products-tab">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2>Product Management</h2>
+                            <button class="btn-primary" id="add-product-btn">Add New Product</button>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Price</th>
+                                        <th>Visibility</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products-table">
+                                    <!-- Products will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Visibility Tab -->
+                <div class="tab-content" id="sections-tab">
+                    <div class="content-section">
+                        <h2>Section Visibility</h2>
+                        <p>Toggle which sections are visible on the main website</p>
+                        <div class="toggle-cards" id="section-visibility">
+                            <!-- Section toggles will be loaded here -->
+                        </div>
+                        <button class="btn-primary" id="save-sections-btn">Save Changes</button>
+                    </div>
+                </div>
+
+                <!-- Other tabs would be implemented similarly -->
+                <div class="tab-content" id="testimonials-tab">
+                    <!-- Testimonials management UI -->
+                </div>
+                
+                <div class="tab-content" id="videos-tab">
+                    <!-- Videos management UI -->
+                </div>
+                
+                <div class="tab-content" id="giveaway-tab">
+                    <!-- Giveaway management UI -->
+                </div>
+                
+                <div class="tab-content" id="messages-tab">
+                    <!-- Messages management UI -->
+                </div>
+                
+                <div class="tab-content" id="subscribers-tab">
+                    <!-- Subscribers management UI -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="product-modal-title">Add New Product</h2>
+            <form id="product-form" enctype="multipart/form-data">
+                <input type="hidden" id="product-id">
+                <div class="form-group">
+                    <label for="product-name">Product Name</label>
+                    <input type="text" id="product-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-description">Description</label>
+                    <textarea id="product-description" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="product-details">Details</label>
+                    <textarea id="product-details" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Price</label>
+                    <input type="number" id="product-price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-image">Product Image</label>
+                    <input type="file" id="product-image" accept="image/*">
+                    <div id="image-preview"></div>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="product-visible">
+                        <span class="checkmark"></span>
+                        Visible on website
+                    </label>
+                </div>
+                <button type="submit" class="btn-primary">Save Product</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

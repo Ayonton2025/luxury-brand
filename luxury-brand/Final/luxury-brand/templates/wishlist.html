@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist | LuxuryBrand</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">LuxuryBrand</a>
+            <div class="nav-menu">
+                <a href="/#products" class="nav-link">Products</a>
+                <a href="/#testimonials" class="nav-link">Testimonials</a>
+                <a href="/#giveaway" class="nav-link">Giveaway</a>
+                <a href="/#videos" class="nav-link">Videos</a>
+                <a href="/#contact" class="nav-link">Contact</a>
+                <a href="/cart" class="nav-link">Cart <span id="cart-indicator" class="cart-indicator"></span></a>
+                <a href="/wishlist" class="nav-link">Wishlist <span id="wishlist-indicator" class="wishlist-indicator"></span></a>
+                <a href="/admin" class="nav-link admin-btn">Admin</a>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 100px;">
+        <h2 class="section-title">Your Wishlist</h2>
+        
+        <div id="wishlist-items">
+            <!-- Wishlist items will be loaded via JavaScript -->
+            <div class="empty-wishlist-message">
+                <h3>Your wishlist is empty</h3>
+                <p>Start adding items you love to your wishlist</p>
+                <a href="/#products" class="cta-button">Browse Products</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+    // Simple wishlist functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        updateWishlistDisplay();
+    });
+
+    function updateWishlistDisplay() {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const wishlistItems = document.getElementById('wishlist-items');
+        
+        if (wishlist.length === 0) {
+            wishlistItems.innerHTML = `
+                <div class="empty-wishlist-message">
+                    <h3>Your wishlist is empty</h3>
+                    <p>Start adding items you love to your wishlist</p>
+                    <a href="/#products" class="cta-button">Browse Products</a>
+                </div>
+            `;
+            return;
+        }
+        
+        // Show wishlist items
+        wishlistItems.innerHTML = '';
+        
+        wishlist.forEach(item => {
+            const wishlistItem = document.createElement('div');
+            wishlistItem.className = 'wishlist-item';
+            wishlistItem.innerHTML = `
+                <img src="https://via.placeholder.com/80x80?text=Product" alt="${item.name}">
+                <div class="wishlist-item-info">
+                    <h4>${item.name}</h4>
+                    <p>Added on ${new Date(item.date).toLocaleDateString()}</p>
+                    <button class="action-btn cart" onclick="addToCartFromWishlist('${item.id}')">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                    <button class="remove-item" onclick="removeFromWishlist('${item.id}')">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            `;
+            wishlistItems.appendChild(wishlistItem);
+        });
+    }
+
+    function addToCartFromWishlist(productId) {
+        // This would need to fetch product details from your database
+        // For now, we'll use a mock function
+        alert('This would add the product to your cart. In a real implementation, this would fetch product details.');
+    }
+
+    function removeFromWishlist(productId) {
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        wishlist = wishlist.filter(item => item.id !== productId);
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        updateWishlistDisplay();
+        updateWishlistIndicator();
+    }
+    </script>
+</body>
+</html>

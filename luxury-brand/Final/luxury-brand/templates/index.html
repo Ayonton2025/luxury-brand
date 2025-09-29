@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Products | Exclusive Collection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">LuxuryBrand</a>
+            <div class="nav-menu">
+                <a href="#products" class="nav-link">Products</a>
+                <a href="#testimonials" class="nav-link">Testimonials</a>
+                <a href="#giveaway" class="nav-link">Giveaway</a>
+                <a href="#videos" class="nav-link">Videos</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <!-- ADDED: Cart and Wishlist links -->
+                <a href="/cart" class="nav-link">Cart <span id="cart-indicator" class="cart-indicator"></span></a>
+                <a href="/wishlist" class="nav-link">Wishlist <span id="wishlist-indicator" class="wishlist-indicator"></span></a>
+                <a href="/admin" class="nav-link admin-btn">Admin</a>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Exquisite Craftsmanship, Unparalleled Quality</h1>
+            <p class="hero-subtitle">Discover our premium collection designed for those who appreciate the finer things in life.</p>
+            <a href="#products" class="cta-button">Explore Products</a>
+        </div>
+        <div class="hero-overlay"></div>
+    </section>
+
+    <!-- Section 1: Products -->
+    <section id="products" class="section products-section {% if not sections.products %}hidden{% endif %}">
+        <div class="container">
+            <h2 class="section-title">Our Premium Collection</h2>
+            <div class="products-container">
+                {% for product in products %}
+                <!-- ADDED: data-product-id attribute -->
+                <div class="product-card" data-product-id="{{ product.id }}">
+                    <div class="product-image">
+                        <img src="{% if product.image %}{{ url_for('uploaded_file', filename='products/' + product.image) }}{% else %}https://via.placeholder.com/300x200?text=No+Image{% endif %}" 
+     alt="{{ product.name }}"
+     onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'; this.onerror=null;">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">{{ product.name }}</h3>
+                        <p class="product-description">{{ product.description }}</p>
+                        <div class="product-dropdown">
+                            <button class="dropdown-btn">View Details <i class="fas fa-chevron-down"></i></button>
+                            <div class="dropdown-content">
+                                <p>{{ product.details }}</p>
+                                <div class="product-actions">
+                                    <button class="action-btn wishlist"><i class="far fa-heart"></i> Wishlist</button>
+                                    <button class="action-btn cart"><i class="fas fa-shopping-cart"></i> Add to Cart - ${{ "%.2f"|format(product.price) }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Testimonials -->
+    <section id="testimonials" class="section testimonials-section {% if not sections.testimonials %}hidden{% endif %}">
+        <div class="container">
+            <h2 class="section-title">What Our Clients Say</h2>
+            <div class="testimonials-container">
+                <!-- Video Testimonials -->
+                <div class="video-testimonials">
+                    {% for testimonial in testimonials if testimonial.video_url %}
+                    <div class="testimonial-video">
+                        <div class="video-placeholder" data-video="{{ testimonial.video_url }}">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <p class="testimonial-author">{{ testimonial.author }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Text Testimonials Slider -->
+                <div class="text-testimonials">
+                    <div class="testimonial-slider">
+                        {% for testimonial in testimonials if not testimonial.video_url %}
+                        <div class="testimonial-slide {% if loop.first %}active{% endif %}">
+                            <p class="testimonial-text">"{{ testimonial.content }}"</p>
+                            <p class="testimonial-author">- {{ testimonial.author }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="testimonial-controls">
+                        <button class="testimonial-prev"><i class="fas fa-chevron-left"></i></button>
+                        <button class="testimonial-next"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Giveaway -->
+    <section id="giveaway" class="section giveaway-section {% if not sections.giveaway %}hidden{% endif %}">
+        <div class="container">
+            <h2 class="section-title">Exclusive Giveaway</h2>
+            <div class="giveaway-content">
+                {% if giveaway %}
+                <div class="giveaway-image">
+                    <img src="{% if giveaway.image %}{{ url_for('uploaded_file', filename='giveaway/' + giveaway.image) }}{% else %}https://via.placeholder.com/400x300{% endif %}" alt="Giveaway Product">
+                </div>
+                <div class="giveaway-details">
+                    <h3>{{ giveaway.title }}</h3>
+                    <p>{{ giveaway.description }}</p>
+                    <div class="countdown">
+                        <h4>Time Remaining:</h4>
+                        <div class="countdown-timer">
+                            <div class="countdown-item">
+                                <span id="days">00</span>
+                                <span>Days</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="hours">00</span>
+                                <span>Hours</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="minutes">00</span>
+                                <span>Minutes</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="seconds">00</span>
+                                <span>Seconds</span>
+                            </div>
+                        </div>
+                    </div>
+                    <form class="giveaway-form" id="giveaway-form">
+                        <input type="email" placeholder="Enter your email to participate" required>
+                        <button type="submit">Enter Giveaway</button>
+                    </form>
+                </div>
+                {% else %}
+                <div class="no-giveaway">
+                    <p>No active giveaway at the moment. Check back later!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Product Videos -->
+    <section id="videos" class="section videos-section {% if not sections.videos %}hidden{% endif %}">
+        <div class="container">
+            <h2 class="section-title">Discover Our Products</h2>
+            <div class="videos-container">
+                {% for video in videos %}
+                <div class="video-card">
+                    <div class="video-wrapper">
+                        <div class="video-placeholder" data-video="{{ video.video_url }}">
+                            <i class="fas fa-play"></i>
+                            {% if video.thumbnail %}
+                            <img src="{{ url_for('uploaded_file', filename='videos/' + video.thumbnail) }}" alt="{{ video.title }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <h3>{{ video.title }}</h3>
+                    <p>{{ video.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Contact Form -->
+    <section id="contact" class="section contact-section {% if not sections.contact %}hidden{% endif %}">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>We'd Love to Hear From You</h3>
+                    <p>Have questions about our products or need assistance with your order? Reach out to our customer service team.</p>
+                    <div class="contact-details">
+                        <p><i class="fas fa-clock"></i> Response Time: Within 24 hours</p>
+                        <p><i class="fas fa-envelope"></i> support@luxurybrand.com</p>
+                        <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    </div>
+                </div>
+                <form class="contact-form" id="contact-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Your Message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: Footer with Socials -->
+    <footer class="footer {% if not sections.socials %}hidden{% endif %}">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>LuxuryBrand</h3>
+                    <p>Crafting exceptional products for those who appreciate quality and design.</p>
+                </div>
+                <div class="footer-social">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact Info</h4>
+                    <p>123 Luxury Avenue, Suite 100</p>
+                    <p>Beverly Hills, CA 90210</p>
+                    <p>+1 (555) 123-4567</p>
+                    <p>info@luxurybrand.com</p>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Stay Updated</h4>
+                    <form class="newsletter-form" id="newsletter-form">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 LuxuryBrand. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Video Modal -->
+    <div class="video-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="video-container">
+                <iframe id="video-player" width="100%" height="100%" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
